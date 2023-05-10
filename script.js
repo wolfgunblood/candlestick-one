@@ -60,8 +60,8 @@ function drawCharts() {
             .padding(0.3);
         //define x-axis,apply scale and tick formatting
         var xAxis = d3.axisBottom()
-            .scale(xScale)
-            .tickFormat((d) => dateFormatter(d));
+            .scale(xScale); 
+            // .tickFormat((d) => dateFormatter(d));
         // add clip path to focus - needed to make chart draggable
         focus.append("rect")
             .attr("id", "rect")
@@ -81,8 +81,8 @@ function drawCharts() {
         // gX.selectAll(".tick text")
         //     .attr("transform", "translate(-10,0)rotate(-45)")
         //     .style("text-anchor", "end");
-        gX.selectAll(".tick text")
-            .call(wrap, xBand.bandwidth());
+        // gX.selectAll(".tick text")
+        //     .call(wrap, xBand.bandwidth());
 
         // add x-axis to brush
         var gX2 = context.append("g")
@@ -91,8 +91,8 @@ function drawCharts() {
             .call(xAxis);
 
         // add brush x-axis labels
-        gX2.selectAll(".tick text")
-            .call(wrap, xBand.bandwidth());
+        gX2.selectAll(".tick text");
+            // .call(wrap, xBand.bandwidth());
 
         // define min and max prices in data
 		var ymin = d3.min(prices.map(r => r.Low));
@@ -121,9 +121,11 @@ function drawCharts() {
             .enter()
             .append("rect")
             .attr("class", "candle")
-            .attr("x", (d, i) => xScale(i) - xBand.bandwidth() / 2)
-            .attr("y", (d) => yScale(d.Low))
-            .attr
+            .attr("x", (d, i) => xScale(i) - xBand.bandwidth())
+            .attr("y", (d) => yScale(Math.max(d.Open, d.Close)))
+            .attr("width", xBand.bandwidth())
+            .attr("height", (d) => (d.Open === d.Close) ? 1 : yScale(Math.min(d.Open, d.Close)) - yScale(Math.max(d.Open, d.Close)))
+            .attr("fill", (d) => (d.Open === d.Close) ? "grey" : (d.Close > d.Open) ? "green" : "red");
     })
 }
 
